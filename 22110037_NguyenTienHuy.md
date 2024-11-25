@@ -70,6 +70,54 @@ The file is symmetrically encrypted/decrypted by exchanging secret key which is 
 All steps are made manually with openssl at the terminal of each computer.
 
 **Answer 1**:
+In this task I will reuse the `plain.txt` file. To make it hybrid encryption I will use `AES` on sender side and `RSA` on receiver side
+
+## Step to solve this problem
+### 1. Generate keys on both machine:
+On receiver machine, repeat these command to generate a RSA key pair. First is private key, follow by public key. Public key will be share with sender using method in taks 1:
+```sh
+openssl genpkey -algorithm RSA -out private_key.pem -aes256
+```
+```sh
+openssl rsa -pubout -in private_key.pem -out public_key.pem
+```
+### 2. Encrypt the file on sender side:
+Generate symmetric key for AES encryption:
+```sh
+openssl rand -out secret.key 32
+```
+Encrypt the file using AES encryption
+```sh
+openssl enc -aes-256-cbc -salt -in plain.txt -out plain.enc -pass file:./secret.key
+```
+### 3. Encrypt symmetric key with receiver's RSA public key:
+```sh
+openssl rsautl -encrypt -inkey public_key.pem -pubin -in secret.key -out secret.key.enc
+```
+### 4. Transfer the file to receiving machine:
+By repeat with the same method in task 1, we will transfer the encrypted file and encrypted key to receiver:
+```sh
+cat plain.enc | nc 172.17.0.3 12345
+```
+```sh
+cat secret.key.enc | nc 172.17.0.3 12345
+```
+```sh
+nc -l -p 12345 > plain.enc 
+```
+```sh
+nc -l -p 12345 > secret.key.enc
+``` 
+### 5. Decrypt the symmetric key by using RSA private key:
+On receiver side, we decrypt the symmetric key by using receiver RSA's private key:
+```sh
+openssl rsautl -decrypt -inkey private_key.pem -in secret.key.enc -out decrypted_secret.key
+```
+### 6. Decrypt the received file using the decrypted symmetric key 
+```sh
+
+```
+### 7. Verify the decrypted file:
 
 
 # Task 3: Firewall configuration
