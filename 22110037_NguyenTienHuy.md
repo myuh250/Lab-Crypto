@@ -115,10 +115,10 @@ openssl rsautl -decrypt -inkey private_key.pem -in secret.key.enc -out decrypted
 ```
 ### 6. Decrypt the received file using the decrypted symmetric key 
 ```sh
-
+openssl enc -d -aes-256-cbc -in plain.enc -out dec_plain.txt -pass file:./decrypted_secret.key
 ```
 ### 7. Verify the decrypted file:
-
+![verifytask2](images/verifyt2.png)
 
 # Task 3: Firewall configuration
 **Question 1**:
