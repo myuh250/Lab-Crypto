@@ -60,7 +60,7 @@ Then compare them by
 ```sh
 cmp plain.hmac plain.hmac.received
 ```
-If cmp produce no output, it indicate that the files are identical
+If cmp produce no output, it indicate that the files are identical <br>
 ![matched](/images/matched.png)
  
 # Task 2: Transfering encrypted file and decrypt it with hybrid encryption. 
