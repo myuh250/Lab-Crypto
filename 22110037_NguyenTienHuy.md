@@ -19,7 +19,7 @@ First, we write a message and save it in a text file:
 ```sh
 echo "Manifest thi cuoi ki 10d" > plain.txt
 ```
-Verify the newly created file
+Verify the newly created file <br>
 ![plaintext](/images/plaintxt.png)
 ### 2. Generate HMAC:
 On sending machine, we generate a secret key to use for HMAC:
@@ -47,10 +47,21 @@ nc -l -p 12345 > plain.txt
 ```sh
 nc -l -p 12345 > plain.hmac
 ```
-Result on `vm2`:
+Result on `vm2`: <br>
 ![sendsuccess](/images/sendsuccess.png)
 ### 4. Verify file integerity and authenticity at receiving machine:
+After receiving the file and HMAC, the receiver needs to verify the authenticity and integrity of the file. We will do this by generate the HMAC for the received file using the same secret key as used by the sender:
+```sh
+openssl dgst -sha256 -hmac "$(cat hmac.key)" -out plain.hmac.received plain.txt
+```
+*Note that `hmac.key` should be shared by the sender*
 
+Then compare them by
+```sh
+cmp plain.hmac plain.hmac.received
+```
+If cmp produce no output, it indicate that the files are identical
+![matched](/images/matched.png)
  
 # Task 2: Transfering encrypted file and decrypt it with hybrid encryption. 
 **Question 1**:
